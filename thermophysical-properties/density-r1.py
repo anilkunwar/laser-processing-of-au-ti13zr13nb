@@ -93,7 +93,7 @@ st.set_page_config(
 
 st.title("⚖️ Material Density: Ti13Zr13Nb & Au")
 st.markdown("""
-Plots **Density** ($$\rho$$) vs Temperature ($T$) for Solid and Liquid phases.
+Plots **Density** ($\rho$) vs Temperature ($T$) for Solid and Liquid phases.
 """)
 
 # Sidebar Controls
