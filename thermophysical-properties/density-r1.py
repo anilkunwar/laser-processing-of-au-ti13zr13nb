@@ -92,7 +92,7 @@ st.set_page_config(
 )
 
 st.title("⚖️ Material Density Plotter")
-st.markdown("""
+st.markdown(r"""
 Visualization of **Density ($\rho$)** changes across **Temperature ($T$)** for Ti13Zr13Nb and Au.
 """)
 
