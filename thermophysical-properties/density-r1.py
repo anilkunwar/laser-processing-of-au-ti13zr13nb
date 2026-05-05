@@ -91,9 +91,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("⚖️ Material Density: Ti13Zr13Nb & Au")
+st.title("⚖️ Material Density Plotter")
 st.markdown("""
-Plots Density ($\rho$) vs Temperature ($T$) for **Solid** and **Liquid** phases.
+Visualization of **Density ($\rho$)** changes across **Temperature ($T$)** for Ti13Zr13Nb and Au.
 """)
 
 # Sidebar Controls
@@ -101,7 +101,7 @@ st.sidebar.header("Configuration")
 
 # Temperature Range
 temp_min, temp_max = st.sidebar.slider(
-    "Temperature Range (K)",
+    "Temperature Range ($T$) (K)",
     min_value=200.0, max_value=3000.0, value=(298.15, 2500.0), step=10.0
 )
 
@@ -175,9 +175,11 @@ else:
             ax.plot(subset.loc[idx, "Temperature (K)"], subset.loc[idx, "Density (kg/m3)"], 
                     marker='o', color='red', markersize=5)
 
-    ax.set_title("Density vs. Temperature", fontsize=14)
-    ax.set_xlabel("Temperature (K)", fontsize=12)
+    # --- UPDATED PLOT LABELS ---
+    ax.set_title(r"Density ($\rho$) vs Temperature ($T$)", fontsize=14)
+    ax.set_xlabel(r"Temperature $T$ (K)", fontsize=12)
     ax.set_ylabel(r"Density $\rho$ (kg/m$^3$)", fontsize=12)
+    
     ax.grid(True, linestyle=':', alpha=0.6)
     ax.legend()
     
