@@ -1,0 +1,370 @@
+
+    !Phase change solid-liquid
+    !Elmer solver  input file to compute transient solid liquid phase change with enthalpy formulation for bilayer Au@Ti13Nb13Zr
+    !By: Anil Kunwar (2023-08-01), Gliwice
+
+    Header
+      CHECK KEYWORDS Warn
+      !Mesh DB "." "Mesh_1tiau"
+      !Mesh DB "." "Mesh_2tiau"
+      !Mesh DB "." "Mesh_3tiau"
+      !Mesh DB "." "Mesh_4tiau"
+      !Mesh DB "." "Mesh_2"
+      !Mesh DB "." "slab"
+      !Mesh DB "." "Mesh_2"
+      !Mesh DB "." "Mesh_1autinbzr"
+      !Mesh DB "." "Mesh_2autinbzr"
+      !Mesh DB "." "Mesh_3autinbzr"
+      !Mesh DB "." "Mesh_4autinbzr"
+      Mesh DB "." "Mesh_5autinbzr"
+      Include Path ""
+      Results Directory "./results/" 
+      !Results Directory "." 
+    End
+
+    Simulation
+      Max Output Level = 5
+      Coordinate System = Cartesian 3D
+      Coordinate Mapping(3) = 1 2 3
+      Coordinate Scaling = 1.0e-6 !converts units to m for the original geometry in micrometers (300 x 300 x 50 Ti, 300 x 300 x 2 Au)
+      Simulation Type = Transient
+      Steady State Max Iterations = 2 !2 !20 !500 !20
+      !Output Intervals = 20
+      !Output Intervals (66) = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      !Output Intervals (66) = 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3
+      !Timestep intervals(66) =20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20 3 20  3!100
+      !Timestep Sizes(66) = 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5  3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5  3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5  3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5  3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2 1.0e-5 3.65e-2!5
+      !Output Intervals (4) = 1	1  1  1
+      !Timestep intervals (4) = 20000 1000  20000  1000
+      !Timestep Sizes (4) = 1.0e-8 2.0e-7 1.0e-8 2.0e-7
+      !Output Intervals (8) = 1 1  1  1 1 1  1  1 ! This will output the  simulations at each timestep 
+      !Timestep intervals (8) = 10000 10000  10000  10000 10000 10000  10000  10000
+      !Timestep Sizes (8) = 1.0e-7 1.0e-7  1.0e-7  1.0e-7 1.0e-7 1.0e-7  1.0e-7  1.0e-7  ! this size must be equal to or less than the coordinate scaling
+      !Output Intervals (1) = 1 !1
+      !Timestep intervals (1) = 1000
+      !Timestep Sizes (1) =1.0e-5 !1.0e-6 !7
+      !Output Intervals (18) = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 !1
+      !Timestep intervals (18) = 1 1 4 2 1 4 2 1 4 2 1 4 2 1 4 2 1 4
+      !Timestep Sizes (18) =1.0e-5 1.0e-3 1.0e-2 1.0e-5 1.0e-3 1.0e-2 1.0e-5 1.0e-3 1.0e-2 1.0e-5 1.0e-3 1.0e-2 1.0e-5 1.0e-3 1.0e-2 1.0e-5 1.0e-3 1.0e-2 !1.0e-6 !7
+      !Output Intervals (24) = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1!1
+      !Timestep intervals (24) = 10 1 1 1 1 1 10 1 1 1 1 1  10 1 1 1 1 1 10 1 1 1 1 1
+      !Timestep Sizes (24) =1.0e-7 1.0e-5 1.0e-4 1.0e-3 1.0e-2 5.0e-2 1.0e-7 1.0e-5 1.0e-4 1.0e-3 1.0e-2 5.0e-2 1.0e-7 1.0e-5 1.0e-4 1.0e-3 1.0e-2 5.0e-2 1.0e-7 1.0e-5 1.0e-4 1.0e-3 1.0e-2 5.0e-2 !1.0e-6 !7
+      !Output Intervals (14) = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 !1
+      !Timestep intervals (14) = 10 4 10 4 10 4 10 4 10 4 10 4 10 4
+      !Timestep Sizes (14) =1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 !1.0e-6 !7
+      !Output Intervals (1) = 100 !1
+      !Timestep intervals (1) = 30000
+      !Timestep Sizes (1) =1.0e-5 !1.0e-6 !7
+      !Output Intervals (15) = 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 !1
+      !Timestep intervals (15) = 18 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      !Timestep Sizes (15) =1.0e-8  1.0e-6 1.0e-8 1.0e-6  1.0e-9 1.0e-5 1.0e-6 1.0e-4 1.0e-5 1.0e-4 1.0e-6 1.0e-4 1.0e-5 1.0e-6 1.0e-4 !7
+      Output Intervals (73) = 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      Timestep intervals (73) = 18 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5 4 5              
+      Timestep Sizes (73) =1.0e-7  1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6  1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6 1.0e-3 1.0e-6  !7
+      Timestepping Method = BDF 
+      BDF Order = 2 
+      Solver Input File = mesh1phasechange_lsenthalpy.sif
+      Post File = "a.vtu"
+      Use Mesh Names = True
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! Coefficients for input into the user defined subroutine TravellingHeatSource pointed at a boundary condition
+      ! Parameters for the TravellingHeatSource
+      ! Terms related to Eq. 8 of Kunwar et al, Journal of Materials Science & Technology, 2020 (50), pp. 115-127
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Heat Source Width = Real 1.225e-04 !dia 245 um 0.225e-4 ! r_0 m, beam spot diameter = 45 micrometers
+      Heat Source Coefficient = Real 6.00E+10 !1.85E+12,1.00E+11(no convergence) 5.11E+10 7.50E+10 (1900 K) # the amplitude A in Q_laser = A e^(- 2r^2/r_0^2 - omega*z); A = 2*omega*P/pi*r_0^2
+      Heat Source Speed = Real 2.00e-3 !12o.3 mm/min
+      Heat Source Distance = Real 400.0e-6 ! total length for the laser to travel along x-axis
+      Heat Source Initial Position = Real 0.0 ! the center of beam is 0 micrometer along the x-axis
+      y coordinate initial position = Real 0.0 !the center of beam is 0 micrometer along the y-axis
+      ! Since the heat Q_laser is implemented at the boundary, it is not required to mention the initial z-coordinate 
+      !Pulse width = Real 2.0e-2 !20 ms
+      Absorptance of Top Surface Material = Real 6.0E+07 ! per unit length
+      Absorptance of Bottom Surface Material = Real 1.75E+07 ! per unit length The laser is not absorbed by titanium
+      Mesh Levels = 1 !2  ! Making the mesh more finer
+    End
+
+    Constants
+      Gravity(4) = 0 -1 0 9.82
+      Stefan Boltzmann = 5.67e-08
+      Permittivity of Vacuum = 8.8542e-12
+      Boltzmann Constant = 1.3807e-23
+      Unit Charge = 1.602e-19
+    End
+
+   Body 1
+      Target Bodies(1) = 1
+      Name = "Solid_1base" !UpperLiquid
+      Equation = 1
+      Material = 1
+      Body Force = 1
+      Initial condition = 1
+    End
+
+    Body 2
+      Target Bodies(1) = 2
+      Name = " Solid_2au"
+      Equation = 1
+      Material = 2
+      Body Force = 1
+      Initial condition =1
+    End
+    
+    ! Direct solver to be used to prevent the following errors:
+    ! ERROR:: IterSolve: Numerical Error: System diverged over maximum tolerance.
+    ! http://www.elmerfem.org/forum/viewtopic.php?t=3529
+
+
+    Solver 1
+      Equation = Heat Equation
+      Procedure = "HeatSolve" "HeatSolver"
+      Calculate Loads = True
+      Variable = Temperature
+      Exec Solver = Always
+      Stabilize = True
+      Bubbles = True !False
+      Lumped Mass Matrix = False
+      Optimize Bandwidth = True
+      Steady State Convergence Tolerance = 1.0e-6 !1.0e-5
+      Nonlinear System Convergence Tolerance = 1.0e-7 !1.0e-10 !1.0e-7
+      Nonlinear System Max Iterations = 10 !20
+      Nonlinear System Newton After Iterations = 3 !3 !3
+      Nonlinear System Newton After Tolerance = 1.0e-3 !1.0e-5 !1.0e-3
+      Nonlinear System Relaxation Factor = 0.6 !1 !0.6 !1
+      Linear System Solver = Iterative
+      Linear System Iterative Method = BiCGStab !BiCGStabl
+      !!BiCGstabl polynomial degree = 10
+      Linear System Max Iterations = 500
+      Linear System Convergence Tolerance = 1.0e-10 !1.0e-10
+      Linear System Preconditioning = ILU0
+      Linear System ILUT Tolerance = 1.0e-3
+      Linear System Abort Not Converged = False
+      Linear System Residual Output = 1
+      Linear System Precondition Recompute = 1
+      !Linear System Solver = Direct
+      !Linear System Direct Method = UMFPack
+      !Steady State Convergence Tolerance = 1.0e-4
+    End
+
+    Solver 2
+      Equation = Navier-Stokes
+      Variable = Flow Solution[Velocity:3 Pressure:1]
+      Procedure = "FlowSolve" "FlowSolver"
+      Calculate Loads = True
+      Exec Solver = Always
+      Stabilize = True
+      Bubbles = False
+      Lumped Mass Matrix = False
+      Optimize Bandwidth = True
+      Steady State Convergence Tolerance = 1.0e-4 !1.0e-5
+      Nonlinear System Convergence Tolerance = 1.0e-7 !1.0e-7
+      Nonlinear System Max Iterations = 5 !3 !5 !20 !20
+      Nonlinear System Newton After Iterations = 3 !2 !3 !3
+      Nonlinear System Newton After Tolerance = 1.0e-3
+      Nonlinear System Relaxation Factor = 0.6 ! 1 !0.5 !1
+      Linear System Solver = Iterative
+      Linear System Iterative Method = BiCGStab !BiCGStabl
+      !BiCGstabl polynomial degree = 10
+      Linear System Max Iterations = 500
+      Linear System Convergence Tolerance = 1.0e-10 !1.0e-10 1.0e-10
+      Linear System Preconditioning = ILU0
+      Linear System ILUT Tolerance = 1.0e-3
+      Linear System Abort Not Converged = False
+      Linear System Residual Output = 1
+      Linear System Precondition Recompute = 1
+      !Linear System Solver = Direct
+      !Linear System Direct Method = UMFPack
+      !Steady State Convergence Tolerance = 1.0e-4
+    End
+    
+    Solver 3
+    Exec Solver = never
+    Equation = SaveLine
+    Procedure = "SaveData" "SaveLine"
+    Filename = f.dat
+    End
+
+    !Solver 4
+      !Equation = Result Output
+      !Save Geometry Ids = True
+      !Output Format = Vtu
+      !Vtu Format = Logical True
+      !Procedure = "ResultOutputSolve" "ResultOutputSolver"
+      !Output File Name = Melting_front !comp_elmer_comsol
+      !Scalar Field 1 = Temperature loads
+      !Scalar Field 2 = Temperature
+      !Scalar Field 4 = Pressure
+      !Vector Field 1 = Velocity
+      !Single Precision = True
+      !Exec Solver = After saving
+    !End
+
+    Equation 1
+      Name = "Equation 1"
+      Phase Change Model = Spatial 2
+      Check Latent Heat Release = True
+      Convection = Computed
+      Navier-Stokes = True
+      NS Convect = True
+      Active Solvers(2) = 1 2 !4
+    End
+
+    Material 1
+      Name = "Solid_1Ti" !Titanium
+      Reference Temperature = 298
+      !!!!!!!!!!!!!!!!!table for the viscosity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Viscosity = Variable Temperature
+    Real
+      include ./viscosity/mu_tinbzr.dat
+    End
+      !!!!!!volume expansion coefficient for Boussinesq Approximation!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Heat expansion Coefficient = 6.9e-5!length expansion coefficient (CTE) = 23.24e-6 H.M.Jin & p. Wu 2002
+      !!!!!!!!!!!!!!!!!table for the enthalpy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Specific Enthalpy = Variable Temperature
+    Real
+      include ./specific_enthalpy/specific_enthalpy_Ti13Nb13Zr.dat
+    End
+      Phase Change Intervals(2,1) = 1953 1993 !1939.0 1943.0
+      Compressibility Model = Incompressible
+      Reference Pressure = 0
+      !Reference Temperature = Real 298
+      Specific Heat Ratio = 1.4
+      !!!!!!!!!!!!!!UDF for Thermal Conductivity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+      !Heat Conductivity = 17.0
+      !!!!!!!!!!!!!!!!!!!!Variable k_th!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Heat Conductivity = Variable Temperature
+      Procedure "getTiNbZrThermalConductivity" "getThermalConductivity"
+       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! Thermal conductivity values of Ti13Nb13Zr
+      Reference Thermal Conductivity C Solid TiNbZr = Real 2.629e+01 !C_Ti13Nb13Zr
+      Cond Coeff B Solid TiNbZr = Real 4.80727332e-03 ! B_TiNbZr
+      Cond Coeff A Solid TiNbZr = Real -1.66755674e-06 ! A_TiNbZr
+      Cond Coeff D Liquid TiNbZr = Real 0.017 ! D_TiNbZr
+      Reference Thermal Conductivity E Liquid TiNbZr = Real 2.9663644E+01 ! E_TiNbZr
+      Melting Point Temperature TiNbZr = Real 1973.15 ! Gasik and Yu 2009, 17th Plansee Seminar,  enthalpy file 
+      !Reference Thermal Conductivity B = Real 60.054 !88.9342 N. Aksoz et al. 2013
+      !Slope A = Real -0.009 !-0.0602857 
+      !Heat Capacity = 295
+      !!!!!!!!!!!!!!!!!!!!!!User defined function for density!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !Density = 4506 !7093.926
+      !Density as a function of temperature UDF
+      !Density = Variable Temperature
+      !Procedure "getDensity" "getDensity"
+      !Reference Temperature = Real 298
+      !Reference Density A = Real 7276.6
+      !Slope B = Real -0.613
+      Density = Variable Temperature
+      Procedure "getTiNbZrDensity" "getDensity"
+      Reference Density C Solid TiNbZr = Real  5.29571e+03 !C_TiNbZr
+      !Solid_ti_rho_constant = Real 4545.6
+      Density Coeff B Solid TiNbZr = Real -1.17609767e-01 ! B_TiNbZr
+      Density Coeff A Solid TiNbZr = Real -6.12812244e-05  ! A_TiNbZr
+      Density Coeff D Liquid TiNbZr = Real -0.23  ! D_TiNbZr
+      Reference Density E Liquid TiNbZr = Real 4926.781505 ! E_TiNbZr
+    End
+
+   Material 2
+      Name = "Solid_2Au" !Gold
+      Reference Temperature = 298
+      !!!!!!!!!!!!!!!!!table for the viscosity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Viscosity = Variable Temperature
+    Real
+      include ./viscosity/mu_au.dat
+    End
+      !!!!!!volume expansion coefficient for Boussinesq Approximation!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Heat expansion Coefficient = 6.9e-5!length expansion coefficient (CTE) = 23.24e-6 H.M.Jin & p. Wu 2002
+      !!!!!!!!!!!!!!!!!table for the enthalpy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Specific Enthalpy = Variable Temperature
+    Real
+      include ./specific_enthalpy/specific_enthalpy_Au.dat
+    End
+      Phase Change Intervals(2,1) = 1330.0 1350 !1335.0 1339.0
+      Compressibility Model = Incompressible
+      Reference Pressure = 0
+      !Reference Temperature = Real 298
+      Specific Heat Ratio = 1.4
+      !!!!!!!!!!!!!!UDF for Thermal Conductivity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+      !Heat Conductivity = 310.0 
+      !!!!!!!!!!!!!!!!!!!!Variable k_th!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Heat Conductivity = Variable Temperature
+      Procedure "getAuThermalConductivity" "getThermalConductivity"
+      ! Thermal conductivity values of Au (ksolid = AT^2+BT+C, kliquid = DT+E)
+      Reference Thermal Conductivity C Solid Au = Real 3.38918567e+02 !C_Au
+      Cond Coeff B Solid Au = Real -6.93088808e-02 ! B_Au
+      Cond Coeff A Solid Au = Real 0.0 ! A_Au
+      Cond Coeff D Liquid Au = Real 0.027397 ! D_Au
+      Reference Thermal Conductivity E Liquid Au = Real 100.0 ! E_Au
+      Melting Point Temperature Au = Real 1337.0
+      !Reference Thermal Conductivity B = Real 60.054 !88.9342 N. Aksoz et al. 2013
+      !Slope A = Real -0.009 !-0.0602857 
+      Heat Capacity = 295
+      !!!!!!!!!!!!!!!!!!!!!!User defined function for density!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !Density = 19360 !7093.926
+      !Density as a function of temperature UDF
+      !Density = Variable Temperature
+      !Procedure "getDensity" "getDensity"
+      !Reference Temperature = Real 298
+      !Reference Density A = Real 7276.6
+      !Slope B = Real -0.613
+      Density = Variable Temperature
+      Procedure "getAuDensity" "getDensity"
+      Reference Density C Solid Au = Real 19657.6 !C_Au
+      Density Coeff B Solid Au = Real -1.20 ! B_Au
+      Density Coeff A Solid Au = Real 0.0  ! A_Au
+      Density Coeff D Liquid Au = Real -1.44  ! D_Au
+      Reference Density E Liquid Au = Real 19325.28 ! E_Au
+    End
+    Body Force 1
+      Name = "Natural convection"
+      Boussinesq = True
+    End
+
+    Initial Condition 1
+      Name = "InitialCondition 1"
+      Velocity 2 = 0
+      Pressure = 0
+      Velocity 1 = 0
+      Temperature = 298.00
+    End
+
+    !Initial Condition 2
+      !Name = "InitialCondition 2"
+      !Velocity 2 = 0
+      !Pressure = 0
+      !Velocity 1 = 0
+      !Temperature = 298.00
+    !End
+
+    Boundary Condition 1
+     Name = "Face_1baseleft Face_2auleft Face_10baseright  Face_11auright"
+     Target Boundaries(4) = 1 2 10 11
+      External Temperature = 404.00
+      Heat Transfer Coefficient = 15
+      Noslip wall BC = True
+      Save Scalars = Logical True
+    End
+
+    Boundary Condition 2
+     Name = "Face_5basebottom"
+     Target Boundaries(1) = 5
+      External Temperature = 298.00
+      !Define interfacial heat transfer coefficient as h=at^m
+      Heat Transfer Coefficient = Variable time !8000
+      Real MATC "5500*pow(tx,-0.03)"
+      !Real MATC "11500*pow(tx,-0.03)"
+      Noslip wall BC = True
+      Save Scalars = Logical True
+      Temperature = 298.0 !Dirichlet Boundary Condition Imposed
+    End
+
+
+    Boundary Condition 3
+    Name = "Face_7autop"
+    Target Boundaries(1) = 7
+    Heat Flux = Variable time
+    Real Procedure "DifferentTypeHeatSource" "FlatTopHeatSource"
+    !Real Procedure "RectilinearHeatSource" "TravellingHeatSource"
+    !Real Procedure "DifferentTypeHeatSource" "FlatTopHeatSource"
+    Save Line = True
+    End
+
