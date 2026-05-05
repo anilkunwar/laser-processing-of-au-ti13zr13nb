@@ -4,33 +4,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import io
 
-# --- Configuration & Constants derived from Fortran comments ---
+# --- Constants derived from Fortran comments ---
 
 # Ti13Zr13Nb Constants
 TI_NB_ZR = {
     "name": "Ti13Zr13Nb",
     "Tm": 1973.15, # Melting point (Kelvin)
-    "thermal_conductivity": {
-        "solid": {
-            "A": -1.66755674e-06, "B": 4.80727332e-03, "C": 2.629e+01,
-            "offset": 298.15
-        },
-        "liquid": {
-            "D": 0.017, "E": 2.9663644e+01,
-            "offset": 1973.15
-        }
+    # Solid: C + B*(T-298.15) + A*(T-298.15)^2
+    "solid": {
+        "A": -6.12812244e-05,
+        "B": -1.17609767e-01,
+        "C": 5.29571e+03
     },
-    "density": {
-        # Solid: C + B*(T-298.15) + A*(T-298.15)^2
-        "solid": {
-            "A": -6.12812244e-05, "B": -1.17609767e-01, "C": 5.29571e+03,
-            "offset": 298.15
-        },
-        # Liquid: E + D*(T-1973.15)
-        "liquid": {
-            "D": -0.23, "E": 4926.781505,
-            "offset": 1973.15
-        }
+    # Liquid: E + D*(T-1973.15)
+    "liquid": {
+        "D": -0.23,
+        "E": 4926.781505
     }
 }
 
@@ -38,29 +27,16 @@ TI_NB_ZR = {
 AU = {
     "name": "Au",
     "Tm": 1337.33, # Standard melting point for Gold
-    "thermal_conductivity": {
-        # Solid: C + B*T + A*T^2 (A=0)
-        "solid": {
-            "A": 0.0, "B": -6.93088808e-02, "C": 3.38918567e+02,
-            "offset": 0.0 # No offset for Au thermal solid
-        },
-        # Liquid: E + D*T
-        "liquid": {
-            "D": 0.027397, "E": 100.0,
-            "offset": 0.0 # No offset for Au thermal liquid
-        }
+    # Solid: C + B*T + A*T^2 (A=0)
+    "solid": {
+        "A": 0.0,
+        "B": -1.20,
+        "C": 19657.6
     },
-    "density": {
-        # Solid: C + B*T + A*T^2
-        "solid": {
-            "A": 0.0, "B": -1.20, "C": 19657.6,
-            "offset": 0.0 
-        },
-        # Liquid: E + D*T
-        "liquid": {
-            "D": -1.44, "E": 19325.28,
-            "offset": 0.0
-        }
+    # Liquid: E + D*T
+    "liquid": {
+        "D": -1.44,
+        "E": 19325.28
     }
 }
 
@@ -71,34 +47,38 @@ MATERIALS = {
 
 # --- Physics Calculation Functions ---
 
-def calculate_property(mat_name, temp, prop_type):
-    mat = MATERIALS[mat_name]
-    props = mat[prop_type]
+def get_density(temp, material_name):
+    """
+    Calculates Density based on the provided Fortran logic for 'getDensity'.
+    """
+    mat = MATERIALS[material_name]
     Tm = mat["Tm"]
     
-    # Unpack coefficients
-    # Solid coefficients
-    A_s = props["solid"]["A"]
-    B_s = props["solid"]["B"]
-    C_s = props["solid"]["C"]
-    offset_s = props["solid"]["offset"]
-    
-    # Liquid coefficients
-    D_l = props["liquid"]["D"]
-    E_l = props["liquid"]["E"]
-    offset_l = props["liquid"]["offset"]
-    
     if temp < Tm:
-        # Solid Phase Calculation
-        # Formula: C + B*(T - offset) + A*(T - offset)^2
-        T_calc = temp - offset_s
-        val = C_s + B_s * T_calc + A_s * (T_calc**2)
+        # SOLID PHASE
+        if material_name == "Ti13Zr13Nb":
+            # Formula: C + B*(T-298.15) + A*(T-298.15)^2
+            T_offset = 298.15
+            val = (mat["solid"]["C"] + 
+                   mat["solid"]["B"] * (temp - T_offset) + 
+                   mat["solid"]["A"] * ((temp - T_offset)**2))
+        else: # Au
+            # Formula: C + B*T + A*T^2
+            val = (mat["solid"]["C"] + 
+                   mat["solid"]["B"] * temp + 
+                   mat["solid"]["A"] * (temp**2))
         phase = "Solid"
     else:
-        # Liquid Phase Calculation
-        # Formula: E + D*(T - offset)
-        T_calc = temp - offset_l
-        val = E_l + D_l * T_calc
+        # LIQUID PHASE
+        if material_name == "Ti13Zr13Nb":
+            # Formula: E + D*(T-1973.15)
+            T_offset = 1973.15
+            val = (mat["liquid"]["E"] + 
+                   mat["liquid"]["D"] * (temp - T_offset))
+        else: # Au
+            # Formula: E + D*T
+            val = (mat["liquid"]["E"] + 
+                   mat["liquid"]["D"] * temp)
         phase = "Liquid"
         
     return val, phase
@@ -106,40 +86,33 @@ def calculate_property(mat_name, temp, prop_type):
 # --- Streamlit UI Layout ---
 
 st.set_page_config(
-    page_title="Material Property Plotter",
+    page_title="Material Density Plotter",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-st.title("📊 Material Properties: Ti13Zr13Nb & Au")
+st.title("⚖️ Material Density: Ti13Zr13Nb & Au")
 st.markdown("""
-Plots **Thermal Conductivity** or **Density** as a function of temperature based on ELMER user-defined functions.
+Plots **Density** ($\rho$) vs Temperature ($T$) for Solid and Liquid phases.
 """)
 
 # Sidebar Controls
 st.sidebar.header("Configuration")
 
-# 1. Select Property Type
-property_type = st.sidebar.radio(
-    "Select Property to Plot",
-    options=["Thermal Conductivity", "Density"],
-    index=0
-)
-
-# 2. Temperature Range
+# Temperature Range
 temp_min, temp_max = st.sidebar.slider(
     "Temperature Range (K)",
     min_value=200.0, max_value=3000.0, value=(298.15, 2500.0), step=10.0
 )
 
-# 3. Material Selection
+# Material Selection
 selected_materials = st.sidebar.multiselect(
-    "Select Materials",
+    "Select Materials (Select one or both)",
     options=list(MATERIALS.keys()),
     default=list(MATERIALS.keys())
 )
 
-# 4. Resolution
+# Resolution
 num_points = st.sidebar.slider("Data Points", 100, 1000, 500)
 
 # --- Data Generation ---
@@ -153,21 +126,13 @@ else:
     # Prepare Data for Plotting and Download
     plot_data = []
     
-    # Determine Units based on property
-    if property_type == "Thermal Conductivity":
-        y_label = "Thermal Conductivity (W/mK)"
-        col_name = "Conductivity (W/mK)"
-    else:
-        y_label = "Density (kg/m³)"
-        col_name = "Density (kg/m3)"
-    
     for mat_name in selected_materials:
-        values = []
+        density_values = []
         phases = []
         
         for T in temps:
-            val, ph = calculate_property(mat_name, T, property_type.lower().replace(" ", "_"))
-            values.append(val)
+            rho, ph = get_density(T, mat_name)
+            density_values.append(rho)
             phases.append(ph)
             
         # Create DataFrame for this material
@@ -175,7 +140,7 @@ else:
             "Temperature (K)": temps,
             "Material": mat_name,
             "Phase": phases,
-            col_name: values
+            "Density (kg/m3)": density_values
         })
         plot_data.append(df_mat)
 
@@ -196,24 +161,23 @@ else:
         # Plotting Solid
         solid_data = subset[subset["Temperature (K)"] < Tm]
         if not solid_data.empty:
-            ax.plot(solid_data["Temperature (K)"], solid_data[col_name], 
+            ax.plot(solid_data["Temperature (K)"], solid_data["Density (kg/m3)"], 
                     color=c, linestyle='-', linewidth=2, label=f"{mat_name} (Solid)")
         
         # Plotting Liquid
         liquid_data = subset[subset["Temperature (K)"] >= Tm]
         if not liquid_data.empty:
-            ax.plot(liquid_data["Temperature (K)"], liquid_data[col_name], 
+            ax.plot(liquid_data["Temperature (K)"], liquid_data["Density (kg/m3)"], 
                     color=c, linestyle='--', linewidth=2, label=f"{mat_name} (Liquid)")
             
             # Add a marker for Melting Point transition
-            # Find the point closest to Tm in the dataframe
             idx = (subset["Temperature (K)"] - Tm).abs().idxmin()
-            ax.plot(subset.loc[idx, "Temperature (K)"], subset.loc[idx, col_name], 
+            ax.plot(subset.loc[idx, "Temperature (K)"], subset.loc[idx, "Density (kg/m3)"], 
                     marker='o', color='red', markersize=5)
 
-    ax.set_title(f"{property_type} vs. Temperature", fontsize=14)
+    ax.set_title("Density vs. Temperature", fontsize=14)
     ax.set_xlabel("Temperature (K)", fontsize=12)
-    ax.set_ylabel(y_label, fontsize=12)
+    ax.set_ylabel(r"Density $\rho$ (kg/m$^3$)", fontsize=12)
     ax.grid(True, linestyle=':', alpha=0.6)
     ax.legend()
     
@@ -222,16 +186,15 @@ else:
     # --- Data Display and Download ---
     
     st.subheader("📥 Data Download")
-    st.write(f"Preview of the {property_type.lower()} data:")
+    st.write("Preview of the generated density data:")
     st.dataframe(master_df, use_container_width=True)
 
     # Prepare CSV
     csv = master_df.to_csv(index=False).encode('utf-8')
-    filename_base = property_type.lower().replace(" ", "_")
     st.download_button(
         label="Download as CSV",
         data=csv,
-        file_name=f'{filename_base}_data.csv',
+        file_name='density_data.csv',
         mime='text/csv',
     )
 
@@ -243,6 +206,6 @@ else:
     st.download_button(
         label="Download as DAT (Tab-Separated)",
         data=dat_bytes,
-        file_name=f'{filename_base}_data.dat',
+        file_name='density_data.dat',
         mime='text/plain',
     )
